@@ -1,3 +1,45 @@
+#Binaries
+build/*
+src/.dirstamp
+src/comm_patterns/sweep3d
+src/comm_patterns/sweep3d_thread_multiple
+src/comm_patterns/sweep3d_thread_partitioned
+src/pt2pt/availability
+src/pt2pt/early_bird
+src/pt2pt/perceived_bandwidth
+src/pt2pt/overhead
+src/comm_patterns/halo3d
+src/comm_patterns/halo3d_thread_multiple
+
+#Other files
+core.*
+*.swp
+slurm*
+*.out
+.DS_Store
+*.yaml
+
+#Configure files
+ar-lib
+Makefile
+config.h
+config.log
+config.status
+**/.deps/
+**/Makefile
+stamp-h1
+
+# Autogen files
+*.in
+*.m4
+autom4te.cache/*
+compile
+config.h.in
+configure
+depcomp
+install-sh
+missing
+
 # Prerequisites
 *.d
 
