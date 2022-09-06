@@ -16,7 +16,7 @@ And the following communication patterns:
 ## Build Instructions
 
 The results in the ICPP paper were collected using MPIPCL.
-As were are not the authors of that library it is not included in this
+As were are not the authors of that library, it is not included in this
 repository, to recreate the results you can add your copy of that library to
 `src/MPIPCL`.
 
