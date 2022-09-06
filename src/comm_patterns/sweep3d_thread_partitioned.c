@@ -29,7 +29,6 @@
 #include <sys/time.h>
 #include <omp.h>
 #include "../util.h"
-#include "../MPIPCL/mpipcl.h"
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 void get_position(const int rank, const int pex, const int pey, int* myX,
@@ -142,41 +141,41 @@ int main(int argc, char* argv[]) {
     MPI_Info info = MPI_INFO_NULL;
 
     // Map request
-    MPIX_Request xDown_req[4];
-    MPIX_Request yDown_req[4];
-    MPIX_Request xUp_req[4];
-    MPIX_Request yUp_req[4];
+    MPI_Request xDown_req[4];
+    MPI_Request yDown_req[4];
+    MPI_Request xUp_req[4];
+    MPI_Request yUp_req[4];
 
     if (xDown > -1) {
         int count = (nx * kba * vars) / partitions;
-        MPIX_Precv_init(xRecvBuffer, partitions, count, MPI_DOUBLE, xDown, 1000, MPI_COMM_WORLD, info, &xDown_req[0]);
-        MPIX_Psend_init(xSendBuffer, partitions, count, MPI_DOUBLE, xDown, 2000, MPI_COMM_WORLD, info, &xDown_req[1]);
-        MPIX_Psend_init(xSendBuffer, partitions, count, MPI_DOUBLE, xDown, 3000, MPI_COMM_WORLD, info, &xDown_req[2]);
-        MPIX_Precv_init(xRecvBuffer, partitions, count, MPI_DOUBLE, xDown, 4000, MPI_COMM_WORLD, info, &xDown_req[3]);
+        MPI_Precv_init(xRecvBuffer, partitions, count, MPI_DOUBLE, xDown, 1000, MPI_COMM_WORLD, info, &xDown_req[0]);
+        MPI_Psend_init(xSendBuffer, partitions, count, MPI_DOUBLE, xDown, 2000, MPI_COMM_WORLD, info, &xDown_req[1]);
+        MPI_Psend_init(xSendBuffer, partitions, count, MPI_DOUBLE, xDown, 3000, MPI_COMM_WORLD, info, &xDown_req[2]);
+        MPI_Precv_init(xRecvBuffer, partitions, count, MPI_DOUBLE, xDown, 4000, MPI_COMM_WORLD, info, &xDown_req[3]);
     }
 
     if (yDown > -1) {
         int count = (ny * kba * vars) / partitions;
-        MPIX_Precv_init(yRecvBuffer, partitions, count, MPI_DOUBLE, yDown, 1000, MPI_COMM_WORLD, info, &yDown_req[0]);
-        MPIX_Precv_init(yRecvBuffer, partitions, count, MPI_DOUBLE, yDown, 2000, MPI_COMM_WORLD, info, &yDown_req[1]);
-        MPIX_Psend_init(ySendBuffer, partitions, count, MPI_DOUBLE, yDown, 3000, MPI_COMM_WORLD, info, &yDown_req[2]);
-        MPIX_Psend_init(ySendBuffer, partitions, count, MPI_DOUBLE, yDown, 4000, MPI_COMM_WORLD, info, &yDown_req[3]);
+        MPI_Precv_init(yRecvBuffer, partitions, count, MPI_DOUBLE, yDown, 1000, MPI_COMM_WORLD, info, &yDown_req[0]);
+        MPI_Precv_init(yRecvBuffer, partitions, count, MPI_DOUBLE, yDown, 2000, MPI_COMM_WORLD, info, &yDown_req[1]);
+        MPI_Psend_init(ySendBuffer, partitions, count, MPI_DOUBLE, yDown, 3000, MPI_COMM_WORLD, info, &yDown_req[2]);
+        MPI_Psend_init(ySendBuffer, partitions, count, MPI_DOUBLE, yDown, 4000, MPI_COMM_WORLD, info, &yDown_req[3]);
     }
 
     if (xUp > -1) {
         int count = (nx * kba * vars) / partitions;
-        MPIX_Psend_init(xSendBuffer, partitions, count, MPI_DOUBLE, xUp, 1000, MPI_COMM_WORLD, info, &xUp_req[0]);
-        MPIX_Precv_init(xRecvBuffer, partitions, count, MPI_DOUBLE, xUp, 2000, MPI_COMM_WORLD, info, &xUp_req[1]);
-        MPIX_Precv_init(xRecvBuffer, partitions, count, MPI_DOUBLE, xUp, 3000, MPI_COMM_WORLD, info, &xUp_req[2]);
-        MPIX_Psend_init(xSendBuffer, partitions, count, MPI_DOUBLE, xUp, 4000, MPI_COMM_WORLD, info, &xUp_req[3]);
+        MPI_Psend_init(xSendBuffer, partitions, count, MPI_DOUBLE, xUp, 1000, MPI_COMM_WORLD, info, &xUp_req[0]);
+        MPI_Precv_init(xRecvBuffer, partitions, count, MPI_DOUBLE, xUp, 2000, MPI_COMM_WORLD, info, &xUp_req[1]);
+        MPI_Precv_init(xRecvBuffer, partitions, count, MPI_DOUBLE, xUp, 3000, MPI_COMM_WORLD, info, &xUp_req[2]);
+        MPI_Psend_init(xSendBuffer, partitions, count, MPI_DOUBLE, xUp, 4000, MPI_COMM_WORLD, info, &xUp_req[3]);
     }
 
     if (yUp > -1) {
         int count = (ny * kba * vars) / partitions;
-        MPIX_Psend_init(ySendBuffer, partitions, count, MPI_DOUBLE, yUp, 1000, MPI_COMM_WORLD, info, &yUp_req[0]);
-        MPIX_Psend_init(ySendBuffer, partitions, count, MPI_DOUBLE, yUp, 2000, MPI_COMM_WORLD, info, &yUp_req[1]);
-        MPIX_Precv_init(yRecvBuffer, partitions, count, MPI_DOUBLE, yUp, 3000, MPI_COMM_WORLD, info, &yUp_req[2]);
-        MPIX_Precv_init(yRecvBuffer, partitions, count, MPI_DOUBLE, yUp, 4000, MPI_COMM_WORLD, info, &yUp_req[3]);
+        MPI_Psend_init(ySendBuffer, partitions, count, MPI_DOUBLE, yUp, 1000, MPI_COMM_WORLD, info, &yUp_req[0]);
+        MPI_Psend_init(ySendBuffer, partitions, count, MPI_DOUBLE, yUp, 2000, MPI_COMM_WORLD, info, &yUp_req[1]);
+        MPI_Precv_init(yRecvBuffer, partitions, count, MPI_DOUBLE, yUp, 3000, MPI_COMM_WORLD, info, &yUp_req[2]);
+        MPI_Precv_init(yRecvBuffer, partitions, count, MPI_DOUBLE, yUp, 4000, MPI_COMM_WORLD, info, &yUp_req[3]);
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
@@ -197,24 +196,24 @@ int main(int argc, char* argv[]) {
       }
 
       // Recreate communication pattern of sweep from (0,0) towards (Px,Py)
-      if (xDown > -1) { MPIX_Startall(4, xDown_req); }
-      if (yDown > -1) { MPIX_Startall(4, yDown_req); }
-      if (xUp > -1)   { MPIX_Startall(4, xUp_req);   }
-      if (yUp > -1)   { MPIX_Startall(4, yUp_req);   }
+      if (xDown > -1) { MPI_Startall(4, xDown_req); }
+      if (yDown > -1) { MPI_Startall(4, yDown_req); }
+      if (xUp > -1)   { MPI_Startall(4, xUp_req);   }
+      if (yUp > -1)   { MPI_Startall(4, yUp_req);   }
 
       #pragma omp parallel for
       for (int k = 0; k < nz; k += kba) {
           int idx = k / kba;
           int flag = 0;
 
-          if (xDown > -1) { while(!flag) { MPIX_Parrived(&xDown_req[0], idx, &flag); } }
+          if (xDown > -1) { while(!flag) { MPI_Parrived(&xDown_req[0], idx, &flag); } }
           flag = 0;
-          if (yDown > -1) { while(!flag) { MPIX_Parrived(&yDown_req[0], idx, &flag); } }
+          if (yDown > -1) { while(!flag) { MPI_Parrived(&yDown_req[0], idx, &flag); } }
 
           compute_time(comp_ms, percent_noise, noise_type);
 
-          if (xUp > -1) { MPIX_Pready(idx, &xUp_req[0]); }
-          if (yUp > -1) { MPIX_Pready(idx, &yUp_req[0]); }
+          if (xUp > -1) { MPI_Pready(idx, &xUp_req[0]); }
+          if (yUp > -1) { MPI_Pready(idx, &yUp_req[0]); }
       }
 
       // Recreate communication pattern of sweep from (Px,0) towards (0,Py)
@@ -223,14 +222,14 @@ int main(int argc, char* argv[]) {
           int idx = k / kba;
           int flag = 0;
 
-          if (xUp > -1)   { while(!flag) { MPIX_Parrived(&xUp_req[1], idx, &flag);   } }
+          if (xUp > -1)   { while(!flag) { MPI_Parrived(&xUp_req[1], idx, &flag);   } }
           flag = 0;
-          if (yDown > -1) { while(!flag) { MPIX_Parrived(&yDown_req[1], idx, &flag); } }
+          if (yDown > -1) { while(!flag) { MPI_Parrived(&yDown_req[1], idx, &flag); } }
 
           compute_time(comp_ms, percent_noise, noise_type);
 
-          if (xDown > -1) { MPIX_Pready(idx, &xDown_req[1]); }
-          if (yUp > -1)   { MPIX_Pready(idx, &yUp_req[1]); }
+          if (xDown > -1) { MPI_Pready(idx, &xDown_req[1]); }
+          if (yUp > -1)   { MPI_Pready(idx, &yUp_req[1]); }
       }
 
       // Recreate communication pattern of sweep from (Px,Py) towards (0,0)
@@ -239,14 +238,14 @@ int main(int argc, char* argv[]) {
           int idx = k / kba;
           int flag = 0;
 
-          if (xUp > -1)   { while(!flag) { MPIX_Parrived(&xUp_req[2], idx, &flag); } }
+          if (xUp > -1)   { while(!flag) { MPI_Parrived(&xUp_req[2], idx, &flag); } }
           flag = 0;
-          if (yUp > -1)   { while(!flag) { MPIX_Parrived(&yUp_req[2], idx, &flag); } }
+          if (yUp > -1)   { while(!flag) { MPI_Parrived(&yUp_req[2], idx, &flag); } }
 
           compute_time(comp_ms, percent_noise, noise_type);
 
-          if (xDown > -1) { MPIX_Pready(idx, &xDown_req[2]); }
-          if (yDown > -1) { MPIX_Pready(idx, &yDown_req[2]); }
+          if (xDown > -1) { MPI_Pready(idx, &xDown_req[2]); }
+          if (yDown > -1) { MPI_Pready(idx, &yDown_req[2]); }
       }
 
       // Recreate communication pattern of sweep from (0,Py) towards (Px,0)
@@ -255,20 +254,20 @@ int main(int argc, char* argv[]) {
           int idx = k / kba;
           int flag = 0;
 
-          if (xDown > -1) { while(!flag) { MPIX_Parrived(&xDown_req[3], idx, &flag); } }
+          if (xDown > -1) { while(!flag) { MPI_Parrived(&xDown_req[3], idx, &flag); } }
           flag = 0;
-          if (yUp > -1)   { while(!flag) { MPIX_Parrived(&yUp_req[3], idx, &flag);   } }
+          if (yUp > -1)   { while(!flag) { MPI_Parrived(&yUp_req[3], idx, &flag);   } }
 
           compute_time(comp_ms, percent_noise, noise_type);
 
-          if (xUp > -1)   { MPIX_Pready(idx, &xUp_req[3]); }
-          if (yDown > -1) { MPIX_Pready(idx, &yDown_req[3]); }
+          if (xUp > -1)   { MPI_Pready(idx, &xUp_req[3]); }
+          if (yDown > -1) { MPI_Pready(idx, &yDown_req[3]); }
       }
 
-      if (xDown > -1) { MPIX_Waitall(4, xDown_req, MPI_STATUS_IGNORE); }
-      if (yDown > -1) { MPIX_Waitall(4, yDown_req, MPI_STATUS_IGNORE); }
-      if (xUp > -1)   { MPIX_Waitall(4, xUp_req, MPI_STATUS_IGNORE);   }
-      if (yUp > -1)   { MPIX_Waitall(4, yUp_req, MPI_STATUS_IGNORE);   }
+      if (xDown > -1) { MPI_Waitall(4, xDown_req, MPI_STATUS_IGNORE); }
+      if (yDown > -1) { MPI_Waitall(4, yDown_req, MPI_STATUS_IGNORE); }
+      if (xUp > -1)   { MPI_Waitall(4, xUp_req, MPI_STATUS_IGNORE);   }
+      if (yUp > -1)   { MPI_Waitall(4, yUp_req, MPI_STATUS_IGNORE);   }
 
     }
 
@@ -277,31 +276,31 @@ int main(int argc, char* argv[]) {
 
     // Clear Requests because we will call MPI_Psend/recv_init
     if (xDown > -1) {
-        MPIX_Request_free(&xDown_req[0]);
-        MPIX_Request_free(&xDown_req[1]);
-        MPIX_Request_free(&xDown_req[2]);
-        MPIX_Request_free(&xDown_req[3]);
+        MPI_Request_free(&xDown_req[0]);
+        MPI_Request_free(&xDown_req[1]);
+        MPI_Request_free(&xDown_req[2]);
+        MPI_Request_free(&xDown_req[3]);
     }
 
     if (yDown > -1) {
-        MPIX_Request_free(&yDown_req[0]);
-        MPIX_Request_free(&yDown_req[1]);
-        MPIX_Request_free(&yDown_req[2]);
-        MPIX_Request_free(&yDown_req[3]);
+        MPI_Request_free(&yDown_req[0]);
+        MPI_Request_free(&yDown_req[1]);
+        MPI_Request_free(&yDown_req[2]);
+        MPI_Request_free(&yDown_req[3]);
     }
 
     if (xUp > -1) {
-        MPIX_Request_free(&xUp_req[0]);
-        MPIX_Request_free(&xUp_req[1]);
-        MPIX_Request_free(&xUp_req[2]);
-        MPIX_Request_free(&xUp_req[3]);
+        MPI_Request_free(&xUp_req[0]);
+        MPI_Request_free(&xUp_req[1]);
+        MPI_Request_free(&xUp_req[2]);
+        MPI_Request_free(&xUp_req[3]);
     }
 
     if (yUp > -1) {
-        MPIX_Request_free(&yUp_req[0]);
-        MPIX_Request_free(&yUp_req[1]);
-        MPIX_Request_free(&yUp_req[2]);
-        MPIX_Request_free(&yUp_req[3]);
+        MPI_Request_free(&yUp_req[0]);
+        MPI_Request_free(&yUp_req[1]);
+        MPI_Request_free(&yUp_req[2]);
+        MPI_Request_free(&yUp_req[3]);
     }
 
     #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"

@@ -7,7 +7,7 @@ bin_PROGRAMS = overhead              \
 # -lm is for math.h
 AM_CFLAGS = -Wall -Wextra -Wpedantic -Werror -fopenmp -lm -lstdc++
 
-LDADD =../MPIPCL/mpipcl.o ../libutil.a ../libnormal_distribution.a
+LDADD =../libutil.a ../libnormal_distribution.a
 
 overhead_SOURCES = overhead.c
 overhead_CFLAGS = $(AM_CFLAGS)

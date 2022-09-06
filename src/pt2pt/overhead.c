@@ -1,5 +1,4 @@
 #include "../util.h"
-#include "../MPIPCL/mpipcl.h"
 #include "mpi.h"
 #include "omp.h"
 
@@ -17,8 +16,8 @@ main(int argc, char **argv)
   int num_iters;
   double mean_pt2pt_latency;
   times_t time_stamp;
-  MPIX_Request request;
-  MPIX_Request notification_request;
+  MPI_Request request;
+  MPI_Request notification_request;
   char notification_flags[MAX_THREADS];
   interval_t intervals[MAX_THREADS];
 
@@ -101,16 +100,16 @@ main(int argc, char **argv)
     count = (message_size / dsize) / (partitions);
     if (myrank == source)
     {
-      MPIX_Psend_init(message, partitions, count, MPI_DOUBLE, dest, tag,
+      MPI_Psend_init(message, partitions, count, MPI_DOUBLE, dest, tag,
                       MPI_COMM_WORLD, info, &request);
-      MPIX_Precv_init(notification_flags, partitions, 1, MPI_CHAR, dest, 420,
+      MPI_Precv_init(notification_flags, partitions, 1, MPI_CHAR, dest, 420,
                       MPI_COMM_WORLD, info, &notification_request);
     }
     else if (myrank == dest)
     {
-      MPIX_Precv_init(message, partitions, count, MPI_DOUBLE, source, tag,
+      MPI_Precv_init(message, partitions, count, MPI_DOUBLE, source, tag,
                       MPI_COMM_WORLD, info, &request);
-      MPIX_Psend_init(notification_flags, partitions, 1, MPI_CHAR, source, 420,
+      MPI_Psend_init(notification_flags, partitions, 1, MPI_CHAR, source, 420,
                       MPI_COMM_WORLD, info, &notification_request);
     }
 
@@ -123,28 +122,28 @@ main(int argc, char **argv)
       MPI_Barrier(MPI_COMM_WORLD);
 
       flag = 0;
-      MPIX_Start(&request);
-      MPIX_Start(&notification_request);
+      MPI_Start(&request);
+      MPI_Start(&notification_request);
 
       if (myrank == source) {
         #pragma omp parallel for shared(request)
         for (int i=0; i<config.threads; i++) {
           int tid = omp_get_thread_num();
           compute_time(comp_ms, percent_noise, noise_type);
-          MPIX_Pready(tid, &request);
+          MPI_Pready(tid, &request);
           time_stamp.t_0[tid] = MPI_Wtime();
 
           int arr_flag = 0;
           while(!arr_flag) {
-            MPIX_Parrived(&notification_request, tid, &arr_flag);
+            MPI_Parrived(&notification_request, tid, &arr_flag);
           }
           time_stamp.t_1[tid] = MPI_Wtime();
         }
 
         int flag_2 = 0;
         while(!(flag & flag_2)){
-          MPIX_Test(&request, &flag, MPI_STATUS_IGNORE);
-          MPIX_Test(&notification_request, &flag_2, MPI_STATUS_IGNORE);
+          MPI_Test(&request, &flag, MPI_STATUS_IGNORE);
+          MPI_Test(&notification_request, &flag_2, MPI_STATUS_IGNORE);
         }
 
         // Calculate Total Communication Time
@@ -194,16 +193,16 @@ main(int argc, char **argv)
           int tid = omp_get_thread_num();
 
           while(!arr_flag) {
-            MPIX_Parrived(&request, tid, &arr_flag);
+            MPI_Parrived(&request, tid, &arr_flag);
           }
 
-          MPIX_Pready(tid, &notification_request);
+          MPI_Pready(tid, &notification_request);
         }
 
         int flag_2 = 0;
         while(!(flag & flag_2)){
-          MPIX_Test(&request, &flag, MPI_STATUS_IGNORE);
-          MPIX_Test(&notification_request, &flag_2, MPI_STATUS_IGNORE);
+          MPI_Test(&request, &flag, MPI_STATUS_IGNORE);
+          MPI_Test(&notification_request, &flag_2, MPI_STATUS_IGNORE);
         }
       }
     }
@@ -222,8 +221,8 @@ main(int argc, char **argv)
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
-    MPIX_Request_free(&request);
-    MPIX_Request_free(&notification_request);
+    MPI_Request_free(&request);
+    MPI_Request_free(&notification_request);
   }
 
   free(message);

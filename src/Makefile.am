@@ -1,4 +1,4 @@
-SUBDIRS = . MPIPCL pt2pt comm_patterns
+SUBDIRS = . pt2pt comm_patterns
 
 AM_CFLAGS = -Wall -Wextra -Wpedantic -Werror -fopenmp -lm -lstdc++
 

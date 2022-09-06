@@ -16,7 +16,7 @@ main(int argc, char **argv)
   enum NoiseType noise_type;
   int num_iters;
   times_t time_stamp;
-  MPIX_Request request;
+  MPI_Request request;
 
   MPI_Info info = MPI_INFO_NULL;
   const int dsize = (int) sizeof(double);
@@ -64,12 +64,12 @@ main(int argc, char **argv)
     // Init Buffers
     if (myrank == source)
     {
-      MPIX_Psend_init(message, partitions, count, MPI_DOUBLE, dest, tag,
+      MPI_Psend_init(message, partitions, count, MPI_DOUBLE, dest, tag,
                       MPI_COMM_WORLD, info, &request);
     }
     else if (myrank == dest)
     {
-      MPIX_Precv_init(message, partitions, count, MPI_DOUBLE, source, tag,
+      MPI_Precv_init(message, partitions, count, MPI_DOUBLE, source, tag,
                       MPI_COMM_WORLD, info, &request);
     }
 
@@ -78,7 +78,7 @@ main(int argc, char **argv)
     // Starting Benchmark
     for (int itr=0; itr<num_iters; itr++) {
       flag = 0;
-      MPIX_Start(&request);
+      MPI_Start(&request);
 
       invalidate_cache(!config.use_hot_cache);
 
@@ -87,12 +87,12 @@ main(int argc, char **argv)
         for (int i=0; i<config.threads; i++) {
           int tid = omp_get_thread_num();
           compute_time(comp_ms, percent_noise, noise_type);
-          MPIX_Pready(tid, &request);
+          MPI_Pready(tid, &request);
           time_stamp.t_0[tid] = MPI_Wtime();
         }
 
         while(!flag){
-          MPIX_Test(&request, &flag, MPI_STATUS_IGNORE);
+          MPI_Test(&request, &flag, MPI_STATUS_IGNORE);
         }
 
         // Notifiy Completion
@@ -104,7 +104,7 @@ main(int argc, char **argv)
         total_communication_time[itr] = time_stamp.t_1[0]
                                       - time_stamp.t_0[config.threads - 1];
       } else if (myrank == dest) {
-        MPIX_Wait(&request, MPI_STATUS_IGNORE);
+        MPI_Wait(&request, MPI_STATUS_IGNORE);
         // Notifiy Completion
         MPI_Send(message, 1, MPI_CHAR, source, 420, MPI_COMM_WORLD);
       }
@@ -129,7 +129,7 @@ main(int argc, char **argv)
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
-    MPIX_Request_free(&request);
+    MPI_Request_free(&request);
   }
 
   free(message);
