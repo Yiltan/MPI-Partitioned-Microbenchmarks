@@ -206,14 +206,14 @@ int main(int argc, char* argv[]) {
           int idx = k / kba;
           int flag = 0;
 
-          if (xDown > -1) { while(!flag) { MPI_Parrived(&xDown_req[0], idx, &flag); } }
+          if (xDown > -1) { while(!flag) { MPI_Parrived(xDown_req[0], idx, &flag); } }
           flag = 0;
-          if (yDown > -1) { while(!flag) { MPI_Parrived(&yDown_req[0], idx, &flag); } }
+          if (yDown > -1) { while(!flag) { MPI_Parrived(yDown_req[0], idx, &flag); } }
 
           compute_time(comp_ms, percent_noise, noise_type);
 
-          if (xUp > -1) { MPI_Pready(idx, &xUp_req[0]); }
-          if (yUp > -1) { MPI_Pready(idx, &yUp_req[0]); }
+          if (xUp > -1) { MPI_Pready(idx, xUp_req[0]); }
+          if (yUp > -1) { MPI_Pready(idx, yUp_req[0]); }
       }
 
       // Recreate communication pattern of sweep from (Px,0) towards (0,Py)
@@ -222,14 +222,14 @@ int main(int argc, char* argv[]) {
           int idx = k / kba;
           int flag = 0;
 
-          if (xUp > -1)   { while(!flag) { MPI_Parrived(&xUp_req[1], idx, &flag);   } }
+          if (xUp > -1)   { while(!flag) { MPI_Parrived(xUp_req[1], idx, &flag);   } }
           flag = 0;
-          if (yDown > -1) { while(!flag) { MPI_Parrived(&yDown_req[1], idx, &flag); } }
+          if (yDown > -1) { while(!flag) { MPI_Parrived(yDown_req[1], idx, &flag); } }
 
           compute_time(comp_ms, percent_noise, noise_type);
 
-          if (xDown > -1) { MPI_Pready(idx, &xDown_req[1]); }
-          if (yUp > -1)   { MPI_Pready(idx, &yUp_req[1]); }
+          if (xDown > -1) { MPI_Pready(idx, xDown_req[1]); }
+          if (yUp > -1)   { MPI_Pready(idx, yUp_req[1]); }
       }
 
       // Recreate communication pattern of sweep from (Px,Py) towards (0,0)
@@ -238,14 +238,14 @@ int main(int argc, char* argv[]) {
           int idx = k / kba;
           int flag = 0;
 
-          if (xUp > -1)   { while(!flag) { MPI_Parrived(&xUp_req[2], idx, &flag); } }
+          if (xUp > -1)   { while(!flag) { MPI_Parrived(xUp_req[2], idx, &flag); } }
           flag = 0;
-          if (yUp > -1)   { while(!flag) { MPI_Parrived(&yUp_req[2], idx, &flag); } }
+          if (yUp > -1)   { while(!flag) { MPI_Parrived(yUp_req[2], idx, &flag); } }
 
           compute_time(comp_ms, percent_noise, noise_type);
 
-          if (xDown > -1) { MPI_Pready(idx, &xDown_req[2]); }
-          if (yDown > -1) { MPI_Pready(idx, &yDown_req[2]); }
+          if (xDown > -1) { MPI_Pready(idx, xDown_req[2]); }
+          if (yDown > -1) { MPI_Pready(idx, yDown_req[2]); }
       }
 
       // Recreate communication pattern of sweep from (0,Py) towards (Px,0)
@@ -254,14 +254,14 @@ int main(int argc, char* argv[]) {
           int idx = k / kba;
           int flag = 0;
 
-          if (xDown > -1) { while(!flag) { MPI_Parrived(&xDown_req[3], idx, &flag); } }
+          if (xDown > -1) { while(!flag) { MPI_Parrived(xDown_req[3], idx, &flag); } }
           flag = 0;
-          if (yUp > -1)   { while(!flag) { MPI_Parrived(&yUp_req[3], idx, &flag);   } }
+          if (yUp > -1)   { while(!flag) { MPI_Parrived(yUp_req[3], idx, &flag);   } }
 
           compute_time(comp_ms, percent_noise, noise_type);
 
-          if (xUp > -1)   { MPI_Pready(idx, &xUp_req[3]); }
-          if (yDown > -1) { MPI_Pready(idx, &yDown_req[3]); }
+          if (xUp > -1)   { MPI_Pready(idx, xUp_req[3]); }
+          if (yDown > -1) { MPI_Pready(idx, yDown_req[3]); }
       }
 
       if (xDown > -1) { MPI_Waitall(4, xDown_req, MPI_STATUS_IGNORE); }

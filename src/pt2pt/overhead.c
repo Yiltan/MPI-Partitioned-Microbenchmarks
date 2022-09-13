@@ -130,12 +130,12 @@ main(int argc, char **argv)
         for (int i=0; i<config.threads; i++) {
           int tid = omp_get_thread_num();
           compute_time(comp_ms, percent_noise, noise_type);
-          MPI_Pready(tid, &request);
+          MPI_Pready(tid, request);
           time_stamp.t_0[tid] = MPI_Wtime();
 
           int arr_flag = 0;
           while(!arr_flag) {
-            MPI_Parrived(&notification_request, tid, &arr_flag);
+            MPI_Parrived(notification_request, tid, &arr_flag);
           }
           time_stamp.t_1[tid] = MPI_Wtime();
         }
@@ -193,10 +193,10 @@ main(int argc, char **argv)
           int tid = omp_get_thread_num();
 
           while(!arr_flag) {
-            MPI_Parrived(&request, tid, &arr_flag);
+            MPI_Parrived(request, tid, &arr_flag);
           }
 
-          MPI_Pready(tid, &notification_request);
+          MPI_Pready(tid, notification_request);
         }
 
         int flag_2 = 0;

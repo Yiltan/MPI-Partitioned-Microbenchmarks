@@ -1,6 +1,5 @@
 #include <config.h>
 #include "../util.h"
-#include "../MPIPCL/mpipcl.h"
 #include "mpi.h"
 #include "omp.h"
 
@@ -87,7 +86,7 @@ main(int argc, char **argv)
         for (int i=0; i<config.threads; i++) {
           int tid = omp_get_thread_num();
           compute_time(comp_ms, percent_noise, noise_type);
-          MPI_Pready(tid, &request);
+          MPI_Pready(tid, request);
           time_stamp.t_0[tid] = MPI_Wtime();
         }
 

@@ -30,7 +30,7 @@ The benchmarks can be built like so:
 
 ```
 ./autogen.sh
-./configure CC=<mpicc_path> --prefix=<prefix_path>
+./configure CC=$(which mpicc) --prefix=<prefix_path>
 make
 make install
 ```
